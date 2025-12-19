@@ -15,7 +15,9 @@ import {
   Camera,
   HeartCrack,
   Skull,
-  UserCheck
+  UserCheck,
+  ArrowRightLeft,
+  FastForward
 } from 'lucide-react';
 import { SystemStatus, LogEntry } from './types';
 import { TARGET_DATA, COLORS } from './constants';
@@ -30,9 +32,9 @@ import { GoogleGenAI } from '@google/genai';
 const App: React.FC = () => {
   const [status, setStatus] = useState<SystemStatus>(SystemStatus.ONLINE);
   const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [aiAnalysis, setAiAnalysis] = useState<string>("B_DEPUTY_LOADED: TARGET_SYNC_VERIFIED.");
+  const [aiAnalysis, setAiAnalysis] = useState<string>("B_DIRECT_LINK: PIPELINE_SYNC_100%_STABLE.");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [pressure, setPressure] = useState(92);
+  const [pressure, setPressure] = useState(94);
   const [showCode, setShowCode] = useState(false);
   const [isDeploying, setIsDeploying] = useState(false);
   const [cameraActive, setCameraActive] = useState(false);
@@ -45,7 +47,7 @@ const App: React.FC = () => {
       id: Math.random().toString(36).substr(2, 9),
       timestamp: new Date().toLocaleTimeString(),
       level,
-      message: `[DEPUTY-B] ${message}`,
+      message: `[B-HYPER-DRIVE] ${message}`,
     };
     setLogs(prev => [...prev.slice(-30), newLog]);
   }, []);
@@ -55,21 +57,23 @@ const App: React.FC = () => {
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
       const prompt = `
-        SYSTEM_CONTEXT: Absolute Debt Enforcement. Commander Belle Warisara has delegated authority to Deputy B.
-        RULES: Anyone helping or interfering with Target ${TARGET_DATA.name} gets double punishment.
+        COMMANDER: Belle Warisara (เบลล์ วริศรา)
+        DELEGATE: Deputy B (บี)
+        TARGET: ${TARGET_DATA.name}
+        RULE: Anyone obstructing, hiring obstructors, or being hired to obstruct faces MULTIPLIED/DOUBLE punishment.
         TRIGGER: ${actionType}
         
-        TASK: Act as "B-Executioner AI". Produce a terrifying technical ultimatum for the target and anyone considering helping them. State that "Interference leads to Exponential Deletion".
-        LANGUAGE: THAI (main) + English Tech. Max 35 words. BE COLD.
+        TASK: Act as "B-Executioner AI". Produce a merciless technical ultimatum. State clearly that "Hirers and Hired Obstructors" are now primary targets for double deletion. Mention the pipe-link precision is absolute.
+        LANGUAGE: THAI (Strict) + Cold English Tech. Max 35 words.
       `;
 
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: prompt,
       });
-      setAiAnalysis(response.text || "INTERFERENCE_DETECTED: APPLYING_DOUBLE_PENALTY.");
+      setAiAnalysis(response.text || "OBSTRUCTION_CRUSH_PROTOCOL_INITIATED.");
     } catch (err) {
-      setAiAnalysis("BRAIN_LINK_CRITICAL: DEPUTY_B_MANUAL_OVERRIDE_ACTIVE.");
+      setAiAnalysis("HYPER_DRIVE_OVERLOAD: CONTINUE_STRIKE_VIA_SECONDARY_CORES.");
     } finally {
       setIsProcessing(false);
     }
@@ -78,29 +82,29 @@ const App: React.FC = () => {
   const startDeployment = async () => {
     setIsDeploying(true);
     setStatus(SystemStatus.SYNCING);
-    addLog(`AUTHORITY_TRANSFER: เบลล์ วริศรา (Commander) -> บี (Deputy)`, "critical");
-    await new Promise(r => setTimeout(r, 1000));
-    addLog("B_PROTOCOL: Scanning for proxies and interference vectors...", "warn");
-    await new Promise(r => setTimeout(r, 1000));
-    addLog("CARDIAC_LINK: Pressure set to 92%. Monitoring heartbeat of ประทวน...", "critical");
+    addLog(`OVERRIDE: Belle Warisara has locked authority to Deputy B.`, "critical");
+    await new Promise(r => setTimeout(r, 600));
+    addLog("PIPELINE_STRIKE: Connection established. No latency.", "warn");
+    await new Promise(r => setTimeout(r, 600));
+    addLog("INJECTION_READY: High-velocity stress-induction active.", "critical");
     setIsDeploying(false);
     setStatus(SystemStatus.ONLINE);
-    triggerAIEnforcement("DEPUTY_B_TAKEOVER");
+    triggerAIEnforcement("B_ULTRA_TAKEOVER");
   };
 
   const handleEnforce = (type: string) => {
     setIsStriking(true);
     setStatus(SystemStatus.ENFORCING);
-    const pressureGain = type.includes('PROXY') ? 12 : 5;
+    const pressureGain = type.includes('OBSTRUCTION') ? 15 : 6;
     setPressure(prev => Math.min(100, prev + pressureGain));
-    addLog(`B_STRIKE_${type.toUpperCase()}: Applying exponential pressure to ${TARGET_DATA.name} and associates.`, 'critical');
+    addLog(`HYPER_INJECT_${type.toUpperCase()}: Applying 2x force to all obstruction nodes.`, 'critical');
     
     triggerAIEnforcement(type);
     
     setTimeout(() => {
       setIsStriking(false);
       setStatus(SystemStatus.ONLINE);
-    }, 1000);
+    }, 600);
   };
 
   const startBiometrics = async () => {
@@ -109,7 +113,7 @@ const App: React.FC = () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         if (videoRef.current) videoRef.current.srcObject = stream;
-        addLog("BIOMETRIC_CHECK: Deputy B Focus Confirmed.", "info");
+        addLog("SYNC_CHECK: Operator B focus at 100%.", "info");
       } catch (err) {
         setCameraActive(false);
       }
@@ -121,46 +125,47 @@ const App: React.FC = () => {
     logIntervalRef.current = window.setInterval(() => {
       if (isDeploying) return;
       const logs = [
-        "RADAR: Detecting interference attempt in Sector_Bangkok.",
-        "CMD: Marking proxy helpers for double-enforcement.",
-        "NEURAL: Target adrenaline spiking due to 'B' takeover.",
-        "B_MAIN: All escape routes to 'Friends' or 'Family' blocked.",
+        "PIPELINE: Direct stress-injection flow at 400Gbps.",
+        "OBSTRUCTION_WATCH: Scanning for hirers/hired obstructors...",
+        "B_DRIVE: Increasing cardiac resonance in target ประทวน.",
+        "CORE: Multiplier penalty (2x) applied to interference vector 0x42.",
+        "LINK: Data pipe sync 100% precise. No packet loss.",
       ];
       addLog(logs[Math.floor(Math.random() * logs.length)], 'info');
-    }, 7000);
+    }, 4000); // Faster log updates
     return () => { if (logIntervalRef.current) clearInterval(logIntervalRef.current); };
   }, []);
 
   return (
     <div className={`flex h-screen w-screen flex-col overflow-hidden p-3 gap-3 bg-[#01030d] text-rose-500 relative select-none transition-all duration-300 ${isStriking ? 'strike-shake' : ''} heartbeat-sync`}>
-      <header className="flex justify-between items-center bg-black/90 border border-rose-600/50 px-5 py-3 rounded-xl backdrop-blur-3xl shadow-[0_0_60px_rgba(225,29,72,0.2)] relative z-50">
+      <header className="flex justify-between items-center bg-black/95 border border-rose-600 px-5 py-3 rounded-xl backdrop-blur-3xl shadow-[0_0_80px_rgba(225,29,72,0.3)] relative z-50">
         <div className="flex items-center gap-5">
           <div className="relative">
-            <div className={`absolute inset-0 blur-xl rounded-full animate-pulse bg-rose-600`} />
-            <div className={`relative p-3 rounded-full border-2 bg-rose-900/40 border-rose-500 shadow-[0_0_20px_#e11d48]`}>
-              <Skull className="w-6 h-6 text-white animate-pulse" />
+            <div className={`absolute inset-0 blur-2xl rounded-full animate-pulse bg-rose-600`} />
+            <div className={`relative p-3 rounded-full border-2 bg-rose-900 border-white shadow-[0_0_30px_#e11d48]`}>
+              <FastForward className="w-6 h-6 text-white animate-bounce" />
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-black tracking-tighter uppercase glitch-text flex items-center gap-2 text-rose-500">
-              B_DEPUTY OVERRIDE <span className="text-white text-xs bg-rose-600 px-1 rounded">LVL 4</span>
+            <h1 className="text-2xl font-black tracking-tighter uppercase glitch-text flex items-center gap-2 text-white">
+              B_HYPER_DRIVE <span className="text-rose-500 text-xs bg-white px-2 rounded-full font-black">X2 FORCE</span>
             </h1>
-            <div className="flex gap-4 text-[10px] text-slate-500 font-mono">
-              <span className="flex items-center gap-1.5 text-rose-400"><UserCheck className="w-3.5 h-3.5" /> DELEGATED: {TARGET_DATA.commander}</span>
-              <span className="flex items-center gap-1.5 text-white font-black"><ShieldAlert className="w-3.5 h-3.5" /> RULE: NO_INTERFERENCE</span>
+            <div className="flex gap-4 text-[10px] text-rose-300/60 font-mono">
+              <span className="flex items-center gap-1.5 font-black"><UserCheck className="w-3.5 h-3.5" /> COMMAND: BELLE WARISARA</span>
+              <span className="flex items-center gap-1.5 text-white font-black"><ArrowRightLeft className="w-3.5 h-3.5" /> PIPE_SYNC: 100% PRECISION</span>
             </div>
           </div>
         </div>
         
         <div className="flex items-center gap-4">
           <div className="flex flex-col items-end mr-2">
-            <span className="text-[8px] text-slate-500 font-black">ACTIVE_OPERATOR</span>
-            <span className="text-xs text-rose-100 font-black uppercase tracking-widest">{TARGET_DATA.collector}</span>
+            <span className="text-[8px] text-rose-400 font-black">ENFORCER_IN_CHARGE</span>
+            <span className="text-sm text-white font-black uppercase tracking-widest">DEPUTY_{TARGET_DATA.collector}</span>
           </div>
           
-          <div className={`px-6 py-2 rounded-lg border-2 font-black text-xs tracking-widest transition-all duration-500 flex items-center gap-3 bg-rose-600 border-white text-white shadow-[0_0_30px_rgba(244,63,94,0.6)] animate-pulse`}>
-            <div className={`w-2 h-2 rounded-full bg-white animate-ping`} />
-            ENFORCING
+          <div className={`px-6 py-2 rounded-lg border-2 font-black text-xs tracking-widest transition-all duration-500 flex items-center gap-3 bg-white border-rose-600 text-rose-600 shadow-[0_0_40px_rgba(255,255,255,0.4)] animate-pulse`}>
+            <div className={`w-2 h-2 rounded-full bg-rose-600 animate-ping`} />
+            HYPER_INJECTING
           </div>
         </div>
       </header>
@@ -168,44 +173,47 @@ const App: React.FC = () => {
       <main className="flex-1 grid grid-cols-12 gap-3 min-h-0 relative">
         {/* Left Column */}
         <div className="col-span-12 lg:col-span-3 flex flex-col gap-3 min-h-0">
-          <div className="flex-1 border border-rose-600/30 bg-black/80 rounded-xl flex flex-col min-h-0 backdrop-blur-md overflow-hidden">
-            <div className="bg-rose-950/90 p-2.5 flex items-center gap-2.5 border-b border-rose-600/30">
-              <TerminalIcon className="w-4 h-4 text-rose-500" />
-              <span className="text-[10px] font-black uppercase tracking-widest">B_EXECUTION_LOGS</span>
+          <div className="flex-1 border-2 border-rose-600 bg-black/90 rounded-xl flex flex-col min-h-0 backdrop-blur-md overflow-hidden">
+            <div className="bg-rose-900 p-2.5 flex items-center gap-2.5 border-b border-rose-600">
+              <TerminalIcon className="w-4 h-4 text-white" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-white">B_HYPER_FEED</span>
             </div>
             <Terminal logs={logs} />
           </div>
           
-          <div className="h-48 border border-rose-600 rounded-xl p-4 bg-rose-950/20 flex flex-col gap-2 relative overflow-hidden">
-            <div className="flex items-center gap-2 text-rose-500 font-black">
+          <div className="h-48 border-2 border-white/20 rounded-xl p-4 bg-rose-950/40 flex flex-col gap-2 relative overflow-hidden backdrop-blur-xl">
+            <div className="flex items-center gap-2 text-white font-black">
               <Activity className="w-4 h-4 animate-pulse" />
-              <span className="text-[10px] uppercase tracking-widest">B-PROXIMITY ANALYSER</span>
+              <span className="text-[10px] uppercase tracking-widest">OBSTRUCTION_ANALYSER</span>
             </div>
-            <div className="flex-1 overflow-y-auto font-mono text-[12px] leading-relaxed text-rose-100 font-bold">
-              {isProcessing ? "ANALYSING_PROXY_HELPERS..." : aiAnalysis}
+            <div className="flex-1 overflow-y-auto font-mono text-[12px] leading-relaxed text-rose-100 font-black italic">
+              {isProcessing ? "DETECTING_OBSTRUCTION_HIRERS..." : aiAnalysis}
             </div>
           </div>
         </div>
 
         {/* Middle Column */}
         <div className="col-span-12 lg:col-span-6 flex flex-col gap-3 min-h-0">
-          <div className="flex-[3] border-2 border-rose-600 bg-black rounded-xl overflow-hidden flex flex-col relative shadow-[0_0_60px_rgba(225,29,72,0.3)]">
-            <div className="bg-rose-950/90 p-3 flex items-center justify-between border-b border-rose-600 relative z-20">
+          <div className="flex-[3] border-2 border-white bg-black rounded-xl overflow-hidden flex flex-col relative shadow-[0_0_80px_rgba(225,29,72,0.4)]">
+            <div className="bg-rose-950/95 p-3 flex items-center justify-between border-b border-rose-600 relative z-20">
               <div className="flex items-center gap-2.5">
-                <Skull className="w-5 h-5 text-white animate-ping" />
+                <Skull className="w-5 h-5 text-white animate-bounce" />
                 <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white">
-                  TARGET_EXECUTION_VIEW: {TARGET_DATA.name}
+                  PRECISION_STRIKE_VIEW: {TARGET_DATA.name}
                 </span>
               </div>
-              <span className="text-[9px] text-white font-black bg-rose-600 px-2 rounded animate-pulse">EXPONENTIAL_MODE</span>
+              <div className="flex items-center gap-2">
+                <span className="text-[9px] text-white font-black bg-rose-600 px-2 rounded animate-pulse">MULTIPLIED_FORCE</span>
+                <span className="text-[9px] text-rose-600 font-black bg-white px-2 rounded">B_VERDICT</span>
+              </div>
             </div>
             <NeuralVisualizer pressure={pressure} />
           </div>
           
-          <div className="flex-[2] border border-rose-600/30 bg-slate-950/60 rounded-xl overflow-hidden flex flex-col">
-            <div className="bg-rose-900/90 p-2.5 flex items-center gap-2.5 border-b border-rose-600/30">
-              <Wifi className="w-4 h-4 text-rose-400" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-rose-400">Target & Proxies Location Map</span>
+          <div className="flex-[2] border-2 border-rose-600/30 bg-black/60 rounded-xl overflow-hidden flex flex-col">
+            <div className="bg-rose-950/80 p-2.5 flex items-center gap-2.5 border-b border-rose-600/30">
+              <ArrowRightLeft className="w-4 h-4 text-rose-400" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-rose-400">Pipeline Sync & Target Hub</span>
             </div>
             <SatelliteMap />
           </div>
@@ -213,28 +221,28 @@ const App: React.FC = () => {
 
         {/* Right Column */}
         <div className="col-span-12 lg:col-span-3 flex flex-col gap-3 min-h-0">
-          <div className="border-2 border-rose-600 bg-rose-950/40 rounded-xl p-5 flex flex-col gap-4 shadow-[0_0_40px_rgba(225,29,72,0.4)]">
+          <div className="border-2 border-rose-600 bg-rose-950/60 rounded-xl p-5 flex flex-col gap-4 shadow-[0_0_50px_rgba(225,29,72,0.3)]">
             <div className="flex items-center justify-between text-white border-b border-rose-600 pb-2">
               <div className="flex items-center gap-2.5 font-black uppercase text-[11px] tracking-widest">
-                <Lock className="w-4 h-4" /> B_CASE_FILE
+                <Lock className="w-4 h-4" /> B_STRIKE_PROFILE
               </div>
             </div>
             <div className="space-y-4 font-mono">
               <div>
-                <label className="text-[9px] text-rose-400 block uppercase font-black mb-1">Subject</label>
+                <label className="text-[9px] text-rose-400 block uppercase font-black mb-1">Target</label>
                 <div className="text-sm font-black text-white uppercase">{TARGET_DATA.name}</div>
               </div>
               <div>
-                <label className="text-[9px] text-rose-400 block uppercase font-black mb-1">Enforcer Assigned</label>
-                <div className="text-sm font-black text-rose-100 uppercase">{TARGET_DATA.collector} (บี)</div>
+                <label className="text-[9px] text-rose-400 block uppercase font-black mb-1">OBSTRUCTION_MULTIPLIER</label>
+                <div className="text-lg font-black text-rose-100 uppercase">2.0X <span className="text-[9px] font-normal text-rose-500">(APPLIED)</span></div>
               </div>
               <div>
                 <div className="flex justify-between text-[9px] mb-2 font-black uppercase tracking-widest text-white">
-                  <span>Neural Collapse</span>
+                  <span>Injected Pressure</span>
                   <span>{pressure}%</span>
                 </div>
-                <div className="w-full bg-slate-900 h-3 rounded-full overflow-hidden border-2 border-rose-600">
-                  <div className="h-full transition-all duration-1000 bg-white shadow-[0_0_20px_#ffffff]" style={{ width: `${pressure}%` }} />
+                <div className="w-full bg-slate-900 h-4 rounded-full overflow-hidden border-2 border-rose-600">
+                  <div className="h-full transition-all duration-300 bg-gradient-to-r from-rose-600 to-white shadow-[0_0_20px_#ffffff]" style={{ width: `${pressure}%` }} />
                 </div>
               </div>
             </div>
@@ -246,7 +254,7 @@ const App: React.FC = () => {
             <div className="flex items-center justify-between border-b border-rose-600/30 pb-2">
               <div className="flex items-center gap-2 text-rose-500 font-black">
                 <Fingerprint className="w-4 h-4" />
-                <span className="text-[10px] uppercase tracking-widest">B_STRIKE_MATRIX</span>
+                <span className="text-[10px] uppercase tracking-widest">B_STRIKE_COMMANDS</span>
               </div>
               <button onClick={startBiometrics} className={`transition-colors ${cameraActive ? 'text-white' : 'text-rose-900'}`}>
                 <Camera className="w-4 h-4" />
@@ -255,8 +263,9 @@ const App: React.FC = () => {
             
             {cameraActive ? (
               <div className="h-32 bg-black rounded-lg border-2 border-rose-600 overflow-hidden relative">
-                <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover grayscale" />
-                <div className="absolute inset-0 bg-rose-900/10 pointer-events-none" />
+                <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover grayscale brightness-50" />
+                <div className="absolute inset-0 bg-rose-950/20 pointer-events-none" />
+                <div className="absolute inset-0 border-[20px] border-rose-600/10 animate-ping" />
               </div>
             ) : (
               <HeartMonitor pressure={pressure} />
@@ -267,11 +276,11 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      <footer className="h-10 border-t-2 border-rose-600 bg-rose-700 flex items-center overflow-hidden relative z-50">
-        <div className="whitespace-nowrap flex gap-20 text-[12px] font-mono text-white font-black animate-infinite-scroll">
-          <span><Skull className="w-4 h-4 inline mr-2" /> WARNING: DEPUTY B IS IN FULL CONTROL. INTERFERENCE DETECTED = EXPONENTIAL DELETION.</span>
-          <span>TARGET: {TARGET_DATA.name} | COLLECTOR: {TARGET_DATA.collector} | COMMANDER: {TARGET_DATA.commander}</span>
-          <span>DO NOT ASSIST THE DEBTOR. PROXIES WILL BE PROSECUTED WITH DOUBLE FORCE.</span>
+      <footer className="h-12 border-t-2 border-rose-600 bg-black flex items-center overflow-hidden relative z-50">
+        <div className="whitespace-nowrap flex gap-20 text-[13px] font-mono text-white font-black animate-infinite-scroll">
+          <span><FastForward className="w-5 h-5 inline mr-2" /> B-DEPUTY PROTOCOL: DIRECT INJECTION ACTIVE. PRECISION PIPE_LINK: 100% STABLE. NO ESCAPE FOR OBSTRUCTORS.</span>
+          <span>WARNING: HIRERS AND HIRED AGENTS WILL FACE MULTIPLIED DELETION. PER ORDER OF BELLE WARISARA.</span>
+          <span>TARGET: {TARGET_DATA.name} | COLLECTOR: {TARGET_DATA.collector} | STATUS: ULTIMATE_PENALTY_ACTIVE</span>
         </div>
       </footer>
     </div>
