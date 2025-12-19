@@ -1,43 +1,47 @@
 
 import React, { useEffect, useState } from 'react';
 
-const NeuralVisualizer: React.FC = () => {
+interface NeuralVisualizerProps {
+  pressure?: number;
+}
+
+const NeuralVisualizer: React.FC<NeuralVisualizerProps> = ({ pressure = 85 }) => {
   const [rotation, setRotation] = useState(0);
 
   useEffect(() => {
     const frame = requestAnimationFrame(function animate() {
-      setRotation(prev => (prev + 0.5) % 360);
+      // Speed up rotation as pressure increases
+      const speed = 0.5 + (pressure / 100) * 2;
+      setRotation(prev => (prev + speed) % 360);
       requestAnimationFrame(animate);
     });
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [pressure]);
+
+  const isMax = pressure > 90;
 
   return (
-    <div className="flex-1 flex items-center justify-center bg-black relative group">
-      {/* Background Brain Waves */}
-      <svg className="absolute inset-0 w-full h-full opacity-20 pointer-events-none">
-        {[...Array(5)].map((_, i) => (
-          <path
+    <div className={`flex-1 flex items-center justify-center bg-black relative group overflow-hidden transition-all duration-700 ${isMax ? 'shadow-[inset_0_0_100px_rgba(225,29,72,0.3)]' : ''}`}>
+      {/* Background Pulse Rays */}
+      <div className={`absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-1000 ${isMax ? 'opacity-40' : 'opacity-10'}`}>
+        {[...Array(12)].map((_, i) => (
+          <div 
             key={i}
-            d={`M0 ${50 + i * 20} Q 50 ${10 + i * 10}, 100 ${50 + i * 20} T 200 ${50 + i * 20} T 300 ${50 + i * 20} T 400 ${50 + i * 20}`}
-            stroke="#10b981"
-            fill="none"
-            strokeWidth="0.5"
-            className="animate-pulse"
-            style={{ animationDelay: `${i * 0.5}s` }}
+            className="absolute w-1 h-[200%] bg-rose-500/40 blur-sm"
+            style={{ transform: `rotate(${i * 30}deg)` }}
           />
         ))}
-      </svg>
+      </div>
 
       {/* The Sharingan Eye */}
-      <div className="relative w-48 h-48 rounded-full border border-rose-500/20 flex items-center justify-center shadow-[0_0_50px_rgba(244,63,94,0.1)]">
+      <div className={`relative w-48 h-48 rounded-full border border-rose-500/40 flex items-center justify-center shadow-[0_0_80px_rgba(244,63,94,0.2)] ${isMax ? 'animate-pulse' : ''}`}>
         <div 
-          className="absolute inset-0 flex items-center justify-center"
+          className="absolute inset-0 flex items-center justify-center transition-transform duration-300"
           style={{ transform: `rotate(${rotation}deg)` }}
         >
           {/* Sclera/Iris */}
-          <div className="w-32 h-32 rounded-full bg-rose-600 border-4 border-black relative overflow-hidden">
-            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle,black_0%,transparent_70%)]" />
+          <div className={`w-36 h-36 rounded-full border-4 border-black relative overflow-hidden transition-colors duration-1000 ${isMax ? 'bg-rose-700' : 'bg-rose-600'}`}>
+            <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle,black_0%,transparent_80%)]" />
             
             {/* Tomoe Symbols */}
             {[0, 120, 240].map((deg) => (
@@ -46,24 +50,34 @@ const NeuralVisualizer: React.FC = () => {
                 className="absolute w-full h-full flex items-start justify-center"
                 style={{ transform: `rotate(${deg}deg)` }}
               >
-                <div className="w-6 h-6 mt-2 bg-black rounded-full relative">
-                    <div className="absolute -top-1 left-2 w-3 h-6 border-l-4 border-black rounded-l-full rotate-[15deg]" />
+                <div className={`w-7 h-7 mt-2 bg-black rounded-full relative ${isMax ? 'scale-125' : ''} transition-transform`}>
+                    <div className="absolute -top-1 left-3 w-4 h-8 border-l-4 border-black rounded-l-full rotate-[20deg]" />
                 </div>
               </div>
             ))}
+
+            {/* Connecting Rings for Mangekyou state */}
+            {isMax && (
+              <div className="absolute inset-0 border-[6px] border-black rounded-full scale-75 opacity-80" />
+            )}
           </div>
         </div>
 
         {/* Pupil */}
-        <div className="w-8 h-8 bg-black rounded-full z-10 shadow-[0_0_15px_rgba(0,0,0,0.8)]" />
+        <div className={`w-10 h-10 bg-black rounded-full z-10 shadow-[0_0_20px_rgba(0,0,0,1)] flex items-center justify-center`}>
+           <div className="w-2 h-2 bg-rose-500/40 rounded-full animate-ping" />
+        </div>
         
         {/* Glow Effects */}
-        <div className="absolute inset-0 bg-rose-500/5 rounded-full animate-ping pointer-events-none" />
+        <div className={`absolute inset-0 rounded-full pointer-events-none ${isMax ? 'bg-rose-500/10 animate-ping' : ''}`} />
       </div>
 
-      <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center text-[10px] text-rose-500/50 uppercase font-mono">
-        <span>MODE: REALITY_DISTORTION</span>
-        <span className="animate-pulse">SIGNAL_STRENGTH: 100%</span>
+      <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center text-[10px] text-rose-500 font-mono">
+        <div className="flex items-center gap-2">
+           <div className="w-1.5 h-1.5 bg-rose-600 rounded-full animate-pulse" />
+           <span>MODE: {isMax ? 'HEART_PENETRATION' : 'REALITY_DISTORTION'}</span>
+        </div>
+        <span className="animate-pulse">STRESS_LOCK: {pressure}%</span>
       </div>
     </div>
   );
