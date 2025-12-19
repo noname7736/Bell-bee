@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Absolute Git-Automation Dashboard",
+  "description": "A high-performance command & control interface for monitoring the 'Absolute Git-Automation Deployment' pipeline, featuring neural link visualizations and real-time mainframe telemetry.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
